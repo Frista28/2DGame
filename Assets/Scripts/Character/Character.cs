@@ -1,4 +1,5 @@
-﻿using Movable;
+﻿using Checkers;
+using Movable;
 using Movable.Struct;
 using Movable.VelocityModifiers;
 using Movable.VelocityModifiers.Interface;
@@ -6,22 +7,26 @@ using UnityEngine;
 
 namespace Character
 {
+    [RequireComponent(typeof(CapsuleCollider2D), typeof(Rigidbody2D))]
     public class Character : MonoBehaviour
     {
         [SerializeField] private float _gravity = 9.81f;
+        
         [SerializeField] private float _moveSpeed = 9f;
         [SerializeField] private float _jumpForce = 8f;
         
-        [SerializeField] private Transform _groundCheckTransform;
+        private HorizontalMovementModifier _horizontalMovementModifier;
+        private JumpModifier _jumpModifier;
+        
+        [SerializeField] private Vector2 _groundCheckVector = Vector2.down;
         [SerializeField] private LayerMask _groundLayer;
         [SerializeField] private float _groundCheckDistance = 0.1f;
+        
+        private CapsuleSurfaceChecker _groundChecker;
         
         private Rigidbody2D _rigidbody;
 
         private VelocityContext _velocityContext;
-
-        private HorizontalMovementModifier _horizontalMovementModifier;
-        private JumpModifier _jumpModifier;
 
         private ModifierComponentsMover _mover;
 
@@ -51,6 +56,9 @@ namespace Character
             _mover.AddModifier(_horizontalMovementModifier);
             _mover.AddModifier(gravityModifier);
             _mover.AddModifier(_jumpModifier);
+            
+            CapsuleCollider2D capsuleCollider = GetComponent<CapsuleCollider2D>();
+            _groundChecker = new CapsuleSurfaceChecker(_groundLayer, capsuleCollider, _groundCheckVector, _groundCheckDistance);
         }
 
         private void Update()
@@ -70,10 +78,6 @@ namespace Character
             _mover.Move(ref _velocityContext);
         }
 
-        private bool IsGrounded()
-        {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, _groundCheckDistance, _groundLayer);
-            return hit.collider != null;
-        }
+        private bool IsGrounded() => _groundChecker.IsTouching();
     }
 }
