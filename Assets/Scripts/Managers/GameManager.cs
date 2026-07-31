@@ -1,5 +1,4 @@
-﻿using System;
-using Character;
+﻿using Character;
 using Character.Interfaces;
 using Controllers;
 using Spawners;
@@ -17,7 +16,7 @@ namespace Managers
         [SerializeField] private float _fallThreshold = -3f;
         
         private RespawnController<Character.Character> _respawnCharacterController;
-        private FallController _fallController;
+        private DieCharacterController _dieCharacterController;
 
         private ICharacterProvider _characterProvider;
 
@@ -30,7 +29,7 @@ namespace Managers
             _characterProvider.SetCharacter(character);
             
             _respawnCharacterController = new RespawnController<Character.Character>(spawner, _characterPrefab, _characterProvider);
-            _fallController = new FallController(_characterProvider, _respawnCharacterController, _fallThreshold);
+            _dieCharacterController = new DieCharacterController(_characterProvider, _respawnCharacterController, _fallThreshold);
         }
 
         private void Start()
@@ -40,7 +39,7 @@ namespace Managers
 
         private void Update()
         {
-            _fallController.Check();
+            _dieCharacterController.Check();
         }
 
         private void OnDrawGizmos()

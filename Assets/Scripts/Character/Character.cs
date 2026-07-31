@@ -1,15 +1,15 @@
-﻿using Checkers;
+﻿using Character.Interfaces;
+using Checkers;
 using Movable;
 using Movable.Struct;
 using Movable.VelocityModifiers;
 using Movable.VelocityModifiers.Interface;
-using Spawners.Interfaces;
 using UnityEngine;
 
 namespace Character
 {
     [RequireComponent(typeof(CapsuleCollider2D), typeof(Rigidbody2D))]
-    public class Character : MonoBehaviour
+    public class Character : MonoBehaviour, IDamageable
     {
         [SerializeField] private float _gravity = 9.81f;
         
@@ -30,6 +30,8 @@ namespace Character
         private VelocityContext _velocityContext;
 
         private ModifierComponentsMover _mover;
+        
+        public bool IsDead { get; private set; }
 
         public void Move(float direction)
         {
@@ -40,6 +42,12 @@ namespace Character
         {
             if(_velocityContext.OnGround)
                 _jumpModifier.RequestJump();
+        }
+
+        public void TakeDamage()
+        {
+            gameObject.SetActive(false);
+            IsDead = true;
         }
         
         private void Awake()
