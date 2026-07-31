@@ -3,6 +3,7 @@ using Movable;
 using Movable.Struct;
 using Movable.VelocityModifiers;
 using Movable.VelocityModifiers.Interface;
+using Spawners.Interfaces;
 using UnityEngine;
 
 namespace Character
