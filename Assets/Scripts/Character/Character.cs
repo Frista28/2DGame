@@ -70,14 +70,6 @@ namespace Character
             _groundChecker = new CapsuleSurfaceChecker(_groundLayer, capsuleCollider, _groundCheckVector, _groundCheckDistance);
         }
 
-        private void Update()
-        {
-            if(Input.GetButtonDown("Jump"))
-                Jump();
-            
-            Move(Input.GetAxisRaw("Horizontal"));
-        }
-
         private void FixedUpdate()
         {
             _velocityContext.Velocity = _rigidbody.velocity;

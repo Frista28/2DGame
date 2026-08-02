@@ -4,6 +4,7 @@ using Controllers;
 using Spawners;
 using Spawners.Interfaces;
 using UnityEngine;
+using CharacterController = Controllers.CharacterController;
 
 namespace Managers
 {
@@ -17,6 +18,7 @@ namespace Managers
         
         private RespawnController<Character.Character> _respawnCharacterController;
         private DieCharacterController _dieCharacterController;
+        private CharacterController _characterController;
 
         private ICharacterProvider _characterProvider;
 
@@ -30,11 +32,12 @@ namespace Managers
             
             _respawnCharacterController = new RespawnController<Character.Character>(spawner, _characterPrefab, _characterProvider);
             _dieCharacterController = new DieCharacterController(_characterProvider, _respawnCharacterController, _fallThreshold);
+            _characterController = new CharacterController(_characterProvider);
         }
 
         private void Start()
         {
-            _inputManager.Initialize(_respawnCharacterController);
+            _inputManager.Initialize(_respawnCharacterController, _characterController);
         }
 
         private void Update()
